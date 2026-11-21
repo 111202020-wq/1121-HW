@@ -119,6 +119,28 @@ monthly = read("monthly_revenue.csv")   # 千元
 cum = {r["ym"]: num(r["cum"]) for r in monthly}
 mon = {r["ym"]: num(r["revenue"]) for r in monthly}
 
+# A-月：上月累計 + 本月營收 = 本月累計（抓截圖/OCR 讀錯數字）
+for ym in sorted(cum):
+    y, m = ym.split("-")
+    prev = f"{y}-{int(m) - 1:02d}"
+    if m == "01":
+        add("A", cum[ym] == mon[ym], f"{ym}：1 月累計 = 當月營收 {mon[ym]:,.0f}")
+    elif prev in cum:
+        diff = cum[prev] + mon[ym] - cum[ym]
+        msg = f"{ym}：{prev} 累計 {cum[prev]:,.0f} + 當月 {mon[ym]:,.0f} = 累計 {cum[ym]:,.0f} 千元"
+        if diff == 0:
+            add("A", True, msg)
+        else:  # 原始資料以「元」計算後各自四捨五入成千元，差 1～2 千元屬正常
+            add("A", False, msg + f"（差 {diff:+.0f} 千元，原始資料四捨五入）", warn=abs(diff) <= 2)
+
+# B0：12 月累計 vs 年報全年營收
+for r in fin:
+    if r["period"].endswith("-FY"):
+        ym = r["period"][:4] + "-12"
+        if ym in cum:
+            add("B", abs(cum[ym] / 1e3 - num(r["revenue"])) <= 1,
+                f"{r['period']}：月營收 12 月累計 {cum[ym] / 1e3:,.1f} 百萬 vs 年報 {num(r['revenue']):,.1f} 百萬")
+
 # B1：月營收累計 vs 法說會產品組合合計
 for period, rows in periods.items():
     y, rng = period.split("-")
@@ -130,13 +152,25 @@ for period, rows in periods.items():
 
 # B2：季度營收 vs 該季月營收加總
 for r in fin:
-    if r["period"].startswith("2026Q") and len(r["period"]) == 6:
-        q = int(r["period"][-1])
-        ms = [f"2026-{m:02d}" for m in range(3 * q - 2, 3 * q + 1)]
+    if len(r["period"]) == 6 and r["period"][4] == "Q":
+        y, q = r["period"][:4], int(r["period"][-1])
+        ms = [f"{y}-{m:02d}" for m in range(3 * q - 2, 3 * q + 1)]
         if all(m in mon for m in ms):
             s = sum(mon[m] for m in ms) / 1e3
             add("B", abs(s - num(r["revenue"])) <= 1.5,
                 f"{r['period']}：季營收 {num(r['revenue']):,.0f} 百萬 vs 月營收加總 {s:,.0f} 百萬")
+
+# B4：換算期間合計 vs 該期間月營收加總（驗證 C 的換算）
+for d in derived_rows:
+    if d["key"] != "total":
+        continue
+    y, rng = d["period"].split("-")
+    a, b = (int(x) for x in rng.split("~"))
+    ms = [f"{y}-{m:02d}" for m in range(a, b + 1)]
+    if all(m in mon for m in ms):
+        s = sum(mon[m] for m in ms) / 1e5
+        add("B", abs(s - num(d["amount"])) <= 0.02,
+            f"{d['period']}（換算）：合計 {num(d['amount']):.2f} 億 vs 月營收加總 {s:.2f} 億")
 
 # B3：Q1+Q2+Q3 vs 前三季累計
 fp = {r["period"]: r for r in fin}
