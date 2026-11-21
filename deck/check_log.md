@@ -16,3 +16,33 @@
 ### 2026-11-21 15:53 ｜ cards：PASS 62 / FAIL 0
 
 ### 2026-11-21 15:53 ｜ outline：PASS 2 / FAIL 0
+
+### 2026-11-21 15:56 ｜ cards：PASS 65 / FAIL 0
+
+### 2026-11-21 15:56 ｜ outline：PASS 2 / FAIL 0
+
+### 2026-11-21 15:56 ｜ drafts：PASS 12 / FAIL 2
+- ❌ [忠實度] 11.md：數字在引用卡中找不到 → ['2026']
+- ❌ [忠實度] 12.md：數字在引用卡中找不到 → ['2025', '2026', '23']
+
+### 2026-11-21 15:57 ｜ cards：PASS 67 / FAIL 0
+
+### 2026-11-21 15:57 ｜ outline：PASS 2 / FAIL 0
+
+### 2026-11-21 15:57 ｜ drafts：PASS 14 / FAIL 0
+
+### 2026-11-21 15:58 ｜ drafts：PASS 14 / FAIL 0
+
+### 2026-11-21 15:58 ｜ drafts：PASS 14 / FAIL 0
+
+### 2026-11-21 15:59 ｜ drafts：PASS 14 / FAIL 0
+
+### 2026-11-21 16:00 ｜ coverage：PASS 12 / FAIL 0
+
+### 2026-11-21 16:00 ｜ cards：PASS 69 / FAIL 0
+
+### 2026-11-21 16:00 ｜ outline：PASS 2 / FAIL 0
+
+### 2026-11-21 16:00 ｜ drafts：PASS 14 / FAIL 0
+
+### 2026-11-21 16:00 ｜ drafts：PASS 14 / FAIL 0

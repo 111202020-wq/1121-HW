@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>矽格是什麼？</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a fixed 1280×720 test-floor "screen" scaled to fit; data in cyan, cake analogies in warm amber.
+   Single dark look by choice (tech feel requested), so colors are set explicitly for every theme. */
+:root {
+  --bg: #0a111c;          /* deep blue-slate, outside the stage */
+  --panel: #0f1a29;       /* slide surface */
+  --panel-2: #142236;     /* raised blocks */
+  --line: #22344d;        /* hairlines, grid */
+  --fg: #e6edf5;          /* primary text */
+  --muted: #8ea2ba;       /* secondary text */
+  --cyan: #46d4e6;        /* data / tech accent */
+  --cyan-dim: #1f6f7d;
+  --amber: #f0b46a;       /* cake analogy accent */
+  --amber-bg: #2a2117;
+  --f-display: "Space Grotesk", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --f-body: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-body);
+  margin: 0; overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+}
+#viewport { position: relative; width: 100%; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+#stage { width: 1280px; height: 720px; position: relative; transform-origin: center center; flex: none; }
+.slide { position: absolute; inset: 0; display: none; }
+.slide.active { display: block; animation: in .35s ease-out; }
+@keyframes in { from { opacity: .4; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
+
+.frame {
+  position: absolute; inset: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  padding: 44px 64px 0; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 40px 40px; background-position: -1px -1px;
+}
+.frame::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,26,41,.55), var(--panel) 70%); pointer-events: none; }
+.frame > * { position: relative; }
+header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+.kicker { font-family: var(--f-mono); font-size: 15px; letter-spacing: .08em; color: var(--cyan); }
+.kicker::before { content: "▸ "; }
+h1, h2 { margin: 0; font-family: var(--f-display); font-weight: 700; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-size: 40px; line-height: 1.2; }
+.body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 22px; overflow: hidden; padding-bottom: 8px; }
+footer {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  border-top: 1px solid var(--line); padding: 12px 0 14px; margin-top: 14px;
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--muted);
+}
+footer small { margin-left: 8px; opacity: .75; }
+.pg { color: var(--cyan); white-space: nowrap; }
+strong { color: var(--cyan); font-weight: 700; }
+
+p { margin: 0; }
+.lead { font-size: 23px; line-height: 1.65; max-width: 34em; }
+.note { font-size: 17px; color: var(--muted); border-left: 2px solid var(--cyan-dim); padding-left: 14px; }
+ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 10px; font-size: 21px; line-height: 1.55; }
+li::marker { color: var(--cyan); }
+
+/* cover */
+.cover .frame { justify-content: center; padding-top: 0; }
+.cover header { margin-bottom: 18px; }
+.cover h1 { font-size: 92px; line-height: 1.05; }
+.cover .body { flex: none; }
+.cover .lead { font-size: 40px; font-family: var(--f-display); color: var(--cyan); font-weight: 700; }
+.cover .sub { font-size: 22px; color: var(--muted); max-width: 30em; line-height: 1.6; }
+.cover footer { position: absolute; left: 64px; right: 64px; bottom: 0; }
+
+.cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+/* analogy: the only warm element on any slide */
+.analogy { display: flex; gap: 14px; align-items: flex-start; background: var(--amber-bg); border: 1px solid rgba(240,180,106,.35); border-radius: 6px; padding: 16px 20px; }
+.analogy em { font-style: normal; font-family: var(--f-mono); font-size: 13px; letter-spacing: .1em; color: var(--amber); display: block; margin-bottom: 4px; }
+.analogy p { font-size: 19px; line-height: 1.6; }
+.analogy strong { color: var(--amber); }
+.cake { width: 26px; height: 26px; flex: none; fill: none; stroke: var(--amber); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.kpis { display: flex; gap: 16px; flex-wrap: wrap; }
+.kpi { flex: 1 1 0; min-width: 0; background: var(--panel-2); border: 1px solid var(--line); border-top: 2px solid var(--cyan); border-radius: 4px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; }
+.kpi b { font-family: var(--f-mono); font-size: 34px; font-weight: 600; color: var(--cyan); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kpi span { font-size: 16px; color: var(--muted); line-height: 1.45; }
+.col .kpis { flex-direction: column; }
+
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 64px 1fr; grid-template-rows: auto auto; column-gap: 18px; row-gap: 4px; align-items: baseline; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 18px 22px; }
+.steps li::before { content: counter(s, decimal-leading-zero); grid-row: span 2; font-family: var(--f-mono); font-size: 34px; color: var(--cyan); }
+.steps b { font-size: 26px; }
+.steps span { font-size: 19px; color: var(--muted); line-height: 1.5; }
+
+.flow { list-style: none; margin: 4px 0 6px; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.flow li { position: relative; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 16px 14px 18px; display: flex; flex-direction: column; gap: 8px; min-height: 104px; }
+.flow li:not(:last-child)::after { content: "→"; position: absolute; right: -14px; top: 50%; transform: translate(50%, -50%); color: var(--cyan); font-size: 18px; }
+.flow b { font-size: 20px; color: var(--amber); line-height: 1.4; }
+.flow span { font-family: var(--f-mono); font-size: 15px; color: var(--muted); }
+.flow .hi { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan) inset, 0 0 24px rgba(70,212,230,.18); }
+.flow .hi span { color: var(--cyan); }
+.flow i { position: absolute; top: -12px; left: 12px; font-style: normal; font-size: 12px; font-family: var(--f-mono); background: var(--cyan); color: var(--bg); padding: 2px 8px; border-radius: 2px; }
+
+.cards { display: grid; gap: 16px; }
+.cards.n4 { grid-template-columns: repeat(2, 1fr); }
+.cards.n2 { grid-template-columns: repeat(2, 1fr); }
+.card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card h3 { margin: 0; font-family: var(--f-display); font-size: 26px; color: var(--cyan); }
+.card .def { font-size: 19px; line-height: 1.5; }
+.card p { font-size: 19px; line-height: 1.55; }
+.cakeline { display: flex; gap: 10px; align-items: flex-start; color: var(--amber); }
+.cakeline .cake { width: 20px; height: 20px; margin-top: 3px; }
+
+.formula { font-family: var(--f-mono); font-size: 21px; color: var(--cyan); background: #08202a; border: 1px dashed var(--cyan-dim); border-radius: 4px; padding: 14px 18px; }
+
+.timeline { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 2px solid var(--cyan-dim); display: flex; flex-direction: column; gap: 22px; }
+.timeline li { position: relative; display: flex; flex-direction: column; gap: 4px; }
+.timeline li::before { content: ""; position: absolute; left: -29px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.timeline b { font-family: var(--f-mono); font-size: 20px; color: var(--cyan); }
+.timeline span { font-size: 18px; line-height: 1.5; }
+
+.charts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.chart { margin: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 14px 10px 6px; }
+.chart figcaption { font-size: 19px; color: var(--muted); padding-left: 8px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart .axis { stroke: var(--line); stroke-width: 1; }
+.chart .bar { fill: var(--cyan-dim); }
+.chart .bar.last { fill: var(--cyan); }
+.chart .val { fill: var(--fg); font-family: var(--f-mono); font-size: 17px; text-anchor: middle; }
+.chart .lab { fill: var(--muted); font-family: var(--f-mono); font-size: 15px; text-anchor: middle; }
+
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 19px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-family: var(--f-mono); font-size: 14px; font-weight: 400; color: var(--muted); border-bottom: 1px solid var(--cyan-dim); padding: 8px 12px; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); }
+td:not(:first-child) { font-family: var(--f-mono); }
+tbody tr:last-child td { border-bottom: none; }
+tr.total td { color: var(--muted); }
+
+.checks { list-style: none; padding: 0; gap: 16px; }
+.checks li { display: flex; gap: 16px; align-items: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 16px 20px; }
+.checks div { display: flex; flex-direction: column; gap: 4px; }
+.checks b { font-size: 21px; }
+.checks span { font-size: 18px; color: var(--muted); line-height: 1.5; }
+.tick { width: 24px; height: 24px; flex: none; fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; margin-top: 2px; }
+
+/* controls */
+#bar { width: 100%; max-width: 1280px; display: flex; align-items: center; gap: 12px; font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+#progress { flex: 1; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+#progress i { display: block; height: 100%; width: 0; background: var(--cyan); transition: width .3s; }
+#bar button { font: inherit; color: var(--fg); background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 6px 14px; cursor: pointer; }
+#bar button:hover { border-color: var(--cyan); }
+#bar button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+#count { min-width: 56px; text-align: center; color: var(--cyan); }
+.hint { white-space: nowrap; }
+@media (max-width: 640px) { .hint { display: none; } }
+</style>
+
+</head><body><div id="viewport"><div id="stage"><section class="slide cover" id="s1" data-cards="C19" aria-label="第 1 頁"><div class="frame"><header><span class="kicker">投研新人教學｜6257 矽格</span><h1>矽格是什麼？</h1></header><div class="body"><p class="lead">一家 IC 測試廠的 AI 轉型</p><p class="sub">用一個蛋糕的故事，看懂矽格做什麼、怎麼賺錢、怎麼讀懂它的數字</p></div><footer><span class="src">出處：矽格公司概覽<small>（證據卡 C19）</small></span><span class="pg">01 / 14</span></footer></div></section><section class="slide " id="s2" data-cards="C19,C26" aria-label="第 2 頁"><div class="frame"><header><span class="kicker">學習目標</span><h2>今天的三個問題</h2></header><div class="body"><ol class="steps"><li><b>先懂產業</b><span>IC 測試在做什麼？為什麼 AI 讓測試更值錢？</span></li><li><b>認識公司</b><span>矽格是誰？靠什麼成長？</span></li><li><b>讀懂數字</b><span>法說會給的是累計數字，怎麼換算出最新變化？</span></li></ol><p class="note">整份簡報的比喻都用同一個故事：一個蛋糕從食譜到客人手上。</p></div><footer><span class="src">出處：矽格公司概覽、產品組合追蹤<small>（證據卡 C19, C26）</small></span><span class="pg">02 / 14</span></footer></div></section><section class="slide " id="s3" data-cards="C03,C01,C02" aria-label="第 3 頁"><div class="frame"><header><span class="kicker">先懂產業</span><h2>晶片的一生 ＝ 一個蛋糕的旅程</h2></header><div class="body"><ol class="flow"><li class=""><b>研發食譜</b><span>IC 設計</span></li><li class=""><b>中央廚房烤蛋糕</b><span>晶圓製造</span></li><li class=""><b>切塊裝禮盒</b><span>封裝</span></li><li class="hi"><b>品管員逐盒檢查</b><span>測試</span><i>矽格在這裡</i></li><li class=""><b>送到門市</b><span>品牌、系統廠</span></li></ol><p class="lead">矽格就是專門幫很多蛋糕品牌做「品管」（和部分包裝）的代工廠，業界叫 <strong>OSAT</strong>（委外封測廠）。</p><div class="kpis"><div class="kpi"><b>全球第一</b><span>台灣 IC 封測產值排名</span></div><div class="kpi"><b>2,286 億元</b><span>2025 年台灣 IC 測試業產值，年增 14.2%</span></div></div></div><footer><span class="src">出處：封測產業鏈<small>（證據卡 C03, C01, C02）</small></span><span class="pg">03 / 14</span></footer></div></section><section class="slide split" id="s4" data-cards="C04,C05,C06" aria-label="第 4 頁"><div class="frame"><header><span class="kicker">先懂產業</span><h2>IC 測試是什麼？</h2></header><div class="body"><div class="cols"><div class="col"><p class="lead">晶片做好之後，用專門的測試機台確認<strong>功能、速度、耗電、散熱</strong>都符合規格，把不合格的挑掉。</p><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>品管員逐一檢查每個蛋糕的味道、形狀、有沒有塌掉。杯子蛋糕看一下就好；<strong>婚禮用的多層蛋糕</strong>（AI 晶片）要檢查得更仔細、更久。</p></div></aside></div><div class="col"><div class="kpis"><div class="kpi"><b>80.87%</b><span>2025 年矽格營收中「測試」的占比</span></div><div class="kpi"><b>18.33%</b><span>封裝的占比</span></div></div><p class="note">懂測試，就懂矽格的主要生意。</p></div></div></div><footer><span class="src">出處：IC測試是什麼<small>（證據卡 C04, C05, C06）</small></span><span class="pg">04 / 14</span></footer></div></section><section class="slide " id="s5" data-cards="C08,C09,C10,C11,C12,C52,C53" aria-label="第 5 頁"><div class="frame"><header><span class="kicker">先懂產業</span><h2>測試分好幾關</h2></header><div class="body"><div class="cards n4"><div class="card"><h3>CP 晶圓測試</h3><p class="def">還沒切割封裝前，篩出壞的晶粒</p><p class="cakeline"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg>麵糊進烤箱前先試味道，壞的就不烤了，省下烤箱時間和禮盒</p></div><div class="card"><h3>FT 成品測試</h3><p class="def">封裝完成後，確認成品合格</p><p class="cakeline"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg>蛋糕裝進禮盒、要出貨前再檢查一次，確認沒有壓壞</p></div><div class="card"><h3>SLT 系統級測試</h3><p class="def">放進接近真實使用環境的系統實際運作</p><p class="cakeline"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg>擺上餐桌、讓試吃員吃完一整套套餐，確認跟其他菜搭在一起也沒問題</p></div><div class="card"><h3>Burn-in 預燒</h3><p class="def">高溫、高電壓下長時間運作，逼出早期就會壞的晶片</p><p class="cakeline"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg>放在炎熱的戶外展示櫃擺一整天，會融化的先淘汰，不要在婚禮上才塌</p></div></div></div><footer><span class="src">出處：晶圓測試與成品測試、系統級測試與預燒<small>（證據卡 C08, C09, C10, C11, C12, C52, C53）</small></span><span class="pg">05 / 14</span></footer></div></section><section class="slide split" id="s6" data-cards="C07,C13,C14,C15,C16,C48,C17" aria-label="第 6 頁"><div class="frame"><header><span class="kicker">先懂產業</span><h2>為什麼 AI 讓測試更值錢？</h2></header><div class="body"><div class="cols"><div class="col"><div class="formula">晶片越複雜 → 每顆測越久 → 測試廠收得越多</div><ul><li>一般而言，測試廠按<strong>測試時間／機台使用時間</strong>收費（產業慣例，矽格未揭露）</li><li>AI、ASIC（客製化晶片）晶片<strong>功耗高、腳數多、價值高</strong>，更需要 SLT 和 Burn-in</li><li>一顆的測試時間比一般晶片長很多</li></ul></div><div class="col"><p class="lead"><strong>矽光子</strong>：在晶片上用光傳資料，AI 資料中心傳得更快、更省電。測試時要<strong>光電同測</strong>，還要把光纖精準對準晶片。</p><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>一般測試像只嚐味道；光電同測像同時嚐味道、又要檢查細如髮絲的拉糖裝飾有沒有擺在精準的位置。</p></div></aside><div class="kpis"><div class="kpi"><b>224G</b><span>每條通道每秒傳 224 Gb，上一代是 112G</span></div></div></div></div></div><footer><span class="src">出處：IC測試是什麼、系統級測試與預燒、矽光子與光電同測、3A策略<small>（證據卡 C07, C13, C14, C15, C16, C48, C17）</small></span><span class="pg">06 / 14</span></footer></div></section><section class="slide " id="s7" data-cards="C19,C17,C18,C20,C47" aria-label="第 7 頁"><div class="frame"><header><span class="kicker">認識公司</span><h2>認識矽格：3A 策略</h2></header><div class="body"><p class="lead">矽格（6257）是新竹竹東的專業 IC 測試廠，營收約八成來自測試，正從手機晶片測試轉型為 <strong>AI／ASIC／矽光子高階測試</strong>。</p><div class="cards n2"><div class="card"><h3>3A 客群</h3><p class="def">要服務誰</p><p>AI、ASIC（客製化晶片）、Automotive（車用）</p></div><div class="card"><h3>3A 科技</h3><p class="def">用什麼能力服務</p><p>Advanced Test Technology、Automation、AI Factory</p></div></div><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>品管廠決定主攻三種高單價訂單（像婚禮蛋糕、企業禮盒、外銷訂單），並升級三種能力：新的檢驗技術、自動化產線、AI 排程。</p></div></aside><p class="note">合併員工 5,080 人（2025 年底）</p></div><footer><span class="src">出處：矽格公司概覽、3A策略<small>（證據卡 C19, C17, C18, C20, C47）</small></span><span class="pg">07 / 14</span></footer></div></section><section class="slide split" id="s8" data-cards="C40,C49,C36,C38,C37,C39" aria-label="第 8 頁"><div class="frame"><header><span class="kicker">認識公司</span><h2>擴廠：產能就是未來營收</h2></header><div class="body"><div class="cols"><div class="col"><p class="lead">測試廠的產能 ＝ <strong>廠房空間 × 測試機台</strong></p><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>就像廚房空間 × 檢驗台數量。婚禮蛋糕訂單變多、每個又要檢查更久，就得先租更大的廚房、多買檢驗台——先花錢，之後才接得到單。</p></div></aside><div class="kpis"><div class="kpi"><b>88 億元</b><span>2026 全年資本支出，追加 28.22 億後，較原規劃增加約 48%</span></div></div></div><div class="col"><ol class="timeline"><li><b>2026/7</b><span>湖口二廠加入量產；10 月初產出約達總產能四成</span></li><li><b>2026 Q4</b><span>中興三廠提前完工</span></li><li><b>2027 Q1</b><span>中興三廠量產</span></li></ol><p class="note">子公司矽格聯測再追加 20 億元，擴充美系 CPU／GPU 客戶測試產能。</p></div></div></div><footer><span class="src">出處：擴廠與資本支出<small>（證據卡 C40, C49, C36, C38, C37, C39）</small></span><span class="pg">08 / 14</span></footer></div></section><section class="slide " id="s9" data-cards="C22,C23,C24,C25,C46,C57,C58" aria-label="第 9 頁"><div class="frame"><header><span class="kicker">讀懂數字</span><h2>成績單：連三季創新高</h2></header><div class="body"><div class="charts"><figure class="chart"><figcaption>營收（億元）</figcaption><svg viewBox="0 0 300 230" role="img" aria-label="營收（億元）"><line x1="8" x2="292" y1="196" y2="196" class="axis"/><rect x="36.0" y="71.9" width="56" height="124.1" rx="3" class="bar"/><text x="64.0" y="63.9" class="val">52.94</text><text x="64.0" y="218" class="lab">Q1</text><rect x="122.0" y="58.2" width="56" height="137.8" rx="3" class="bar"/><text x="150.0" y="50.2" class="val">58.81</text><text x="150.0" y="218" class="lab">Q2</text><rect x="208.0" y="51.4" width="56" height="144.6" rx="3" class="bar last"/><text x="236.0" y="43.4" class="val">61.72</text><text x="236.0" y="218" class="lab">Q3</text></svg></figure><figure class="chart"><figcaption>毛利率（%）</figcaption><svg viewBox="0 0 300 230" role="img" aria-label="毛利率（%）"><line x1="8" x2="292" y1="196" y2="196" class="axis"/><rect x="36.0" y="66.8" width="56" height="129.2" rx="3" class="bar"/><text x="64.0" y="58.8" class="val">31.7</text><text x="64.0" y="218" class="lab">Q1</text><rect x="122.0" y="56.7" width="56" height="139.3" rx="3" class="bar"/><text x="150.0" y="48.7" class="val">34.2</text><text x="150.0" y="218" class="lab">Q2</text><rect x="208.0" y="51.4" width="56" height="144.6" rx="3" class="bar last"/><text x="236.0" y="43.4" class="val">35.5</text><text x="236.0" y="218" class="lab">Q3</text></svg></figure><figure class="chart"><figcaption>基本 EPS（元）</figcaption><svg viewBox="0 0 300 230" role="img" aria-label="基本 EPS（元）"><line x1="8" x2="292" y1="196" y2="196" class="axis"/><rect x="36.0" y="89.0" width="56" height="107.0" rx="3" class="bar"/><text x="64.0" y="81.0" class="val">2.10</text><text x="64.0" y="218" class="lab">Q1</text><rect x="122.0" y="66.1" width="56" height="129.9" rx="3" class="bar"/><text x="150.0" y="58.1" class="val">2.55</text><text x="150.0" y="218" class="lab">Q2</text><rect x="208.0" y="51.4" width="56" height="144.6" rx="3" class="bar last"/><text x="236.0" y="43.4" class="val">2.84</text><text x="236.0" y="218" class="lab">Q3</text></svg></figure></div><p class="note">毛利率＝毛利 ÷ 營收，越高代表生意越高階；EPS＝每一股幫股東賺了多少錢。</p><p class="note">湖口二廠 7 月加入量產，Q3 是第一個有新產能貢獻的季度。</p></div><footer><span class="src">出處：財務數據總表、2026Q3<small>（證據卡 C22, C23, C24, C25, C46, C57, C58）</small></span><span class="pg">09 / 14</span></footer></div></section><section class="slide " id="s10" data-cards="C43,C51,C41,C42" aria-label="第 10 頁"><div class="frame"><header><span class="kicker">讀懂數字</span><h2>月營收：每個月結一次帳</h2></header><div class="body"><p class="lead">月營收是<strong>最即時</strong>的數據：每月 10 日前公布上個月營收，比季報早約一個半月。</p><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>就像蛋糕店每個月結帳的營業額，不用等到季底對帳，就能先知道生意好不好。</p></div></aside><div class="kpis"><div class="kpi"><b>21.00 億元</b><span>10 月營收，單月歷史新高</span></div><div class="kpi"><b>4 個月</b><span>7–10 月連續超過 20 億元</span></div><div class="kpi"><b>194.47 億元</b><span>1–10 月累計，已接近 2025 全年的 195.87 億元</span></div></div></div><footer><span class="src">出處：月營收<small>（證據卡 C43, C51, C41, C42）</small></span><span class="pg">10 / 14</span></footer></div></section><section class="slide " id="s11" data-cards="C26,C50,C32,C55,C27" aria-label="第 11 頁"><div class="frame"><header><span class="kicker">讀懂數字｜本簡報重點</span><h2>陷阱：累計數字會騙人</h2></header><div class="body"><aside class="analogy"><svg class="cake" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v-6H4z"/><path d="M6 14v-3h12v3"/><path d="M12 11V8"/><path d="M12 5.5c.8.7.8 1.6 0 2-.8-.4-.8-1.3 0-2z"/></svg><div><em>蛋糕比喻</em><p>老闆只告訴你「今年 1–8 月賣出的蛋糕裡，婚禮蛋糕占 24%」。最近幾個月是不是賣得特別好？看不出來。</p></div></aside><p class="lead">矽格法說會的產品組合就是<strong>累計</strong>數字：前 5 個月的成績也混在裡面。</p><div class="tablewrap"><table><thead><tr><th>AI 類營收</th><th>1–5 月累計</th><th>1–8 月累計</th></tr></thead><tbody><tr><td>2026 年</td><td>21.43 億（23%）</td><td>36.08 億（24%）</td></tr></tbody></table></div><div class="formula">6–8 月 ＝ 1–8 月累計 − 1–5 月累計</div></div><footer><span class="src">出處：產品組合追蹤<small>（證據卡 C26, C50, C32, C55, C27）</small></span><span class="pg">11 / 14</span></footer></div></section><section class="slide " id="s12" data-cards="C56,C28,C29,C30,C34,C35,C31,C54,C32" aria-label="第 12 頁"><div class="frame"><header><span class="kicker">讀懂數字｜本簡報重點</span><h2>換算後：6–8 月的真相</h2></header><div class="body"><div class="tablewrap"><table><thead><tr><th>應用</th><th>2025 6–8 月</th><th>2026 6–8 月</th><th>年增</th><th>占比變化</th></tr></thead><tbody><tr><td>AI.CPU/GPU.ASIC.矽光子</td><td>10.00 億</td><td>14.65 億</td><td><strong>+46.5%</strong></td><td>20.8% → 24.2%</td></tr><tr><td>消費電子.智慧家庭</td><td>8.66 億</td><td>12.77 億</td><td><strong>+47.5%</strong></td><td>18.0% → 21.1%</td></tr><tr><td>網通.物聯網</td><td>10.21 億</td><td>12.68 億</td><td>+24.2%</td><td>21.2% → 21.0%</td></tr><tr><td>智慧手機</td><td>15.91 億</td><td>16.50 億</td><td>+3.7%</td><td>33.0% → 27.3%</td></tr><tr><td>車用及醫療</td><td>3.40 億</td><td>3.82 億</td><td>+12.4%</td><td>7.1% → 6.3%</td></tr><tr class="total"><td>合計</td><td>48.18 億</td><td>60.42 億</td><td>+25.4%</td><td></td></tr></tbody></table></div><ul><li>AI 類 6–8 月年增 <strong>46.5%</strong>：累計占比只從 23% 升到 24%，換算後才看得出來</li><li>手機占比下滑，但金額仍成長 3.7%：是別人長得更快</li><li>意外的發現：消費電子年增 47.5%，法說會沒有說明原因，<strong>尚待之後的資料確認</strong></li></ul></div><footer><span class="src">出處：產品組合追蹤<small>（證據卡 C56, C28, C29, C30, C34, C35, C31, C54, C32）</small></span><span class="pg">12 / 14</span></footer></div></section><section class="slide " id="s13" data-cards="C43,C45,C27,C33" aria-label="第 13 頁"><div class="frame"><header><span class="kicker">帶回家用</span><h2>新手追蹤清單</h2></header><div class="body"><ul class="checks"><li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>每月 10 日前</b><span>看月營收，最即時的成績</span></div></li><li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>法說會一年兩場（6/23、10/6）</b><span>拿到最新的累計產品組合</span></div></li><li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>自己換算</b><span>新的累計 − 舊的累計 ＝ 最新一段期間的組合</span></div></li><li><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>注意分類改名</b><span>「AI.ASIC.矽光子.高速運算」改成「AI.CPU/GPU.ASIC.矽光子」，相減前先註記口徑</span></div></li></ul></div><footer><span class="src">出處：月營收、矽格公司概覽、產品組合追蹤<small>（證據卡 C43, C45, C27, C33）</small></span><span class="pg">13 / 14</span></footer></div></section><section class="slide " id="s14" data-cards="C06,C13,C25,C28" aria-label="第 14 頁"><div class="frame"><header><span class="kicker">帶走三句話</span><h2>重點回顧</h2></header><div class="body"><ol class="steps"><li><b>矽格是測試廠</b><span>2025 年營收 80.87% 來自測試，就像專門的蛋糕品管廠</span></li><li><b>AI 讓測試更值錢</b><span>功耗高、腳數多、價值高的晶片要測更久，像婚禮蛋糕要檢查更久</span></li><li><b>數字正在反映</b><span>毛利率 31.7% → 34.2% → 35.5%；6–8 月 AI 類年增 46.5%</span></li></ol></div><footer><span class="src">出處：IC測試是什麼、系統級測試與預燒、2026Q3、產品組合追蹤<small>（證據卡 C06, C13, C25, C28）</small></span><span class="pg">14 / 14</span></footer></div></section></div></div>
+<div id="bar">
+  <button type="button" id="prev" aria-label="上一頁">←</button>
+  <span id="count">1 / 14</span>
+  <button type="button" id="next" aria-label="下一頁">→</button>
+  <div id="progress"><i></i></div>
+  <span class="hint">鍵盤 ← → 翻頁</span>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var stage = document.getElementById("stage");
+  var vp = document.getElementById("viewport");
+  var cur = 0;
+  function fit() {
+    var s = Math.min(vp.clientWidth / 1280, vp.clientHeight / 720);
+    stage.style.transform = "scale(" + s + ")";
+    stage.style.margin = (-(720 - 720 * s) / 2) + "px " + (-(1280 - 1280 * s) / 2) + "px";
+  }
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (el, k) { el.classList.toggle("active", k === cur); });
+    document.getElementById("count").textContent = (cur + 1) + " / " + slides.length;
+    document.querySelector("#progress i").style.width = ((cur + 1) / slides.length * 100) + "%";
+    var h = "#s" + (cur + 1);
+    if (location.hash !== h) { try { history.replaceState(null, "", h); } catch (e) { location.hash = h; } }
+  }
+  function fromHash() { var m = /^#s(\d+)$/.exec(location.hash); return m ? parseInt(m[1], 10) - 1 : 0; }
+  document.getElementById("prev").addEventListener("click", function () { show(cur - 1); });
+  document.getElementById("next").addEventListener("click", function () { show(cur + 1); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(cur + 1); }
+    if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(cur - 1); }
+    if (e.key === "Home") show(0);
+    if (e.key === "End") show(slides.length - 1);
+  });
+  var x0 = null;
+  vp.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener("touchend", function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+  window.addEventListener("hashchange", function () { show(fromHash()); });
+  window.addEventListener("resize", fit);
+  fit(); show(fromHash());
+})();
+</script>
+
+</body></html>

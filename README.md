@@ -12,6 +12,9 @@
 | 每次 ingest 的檢查紀錄 | [log.md](log.md) |
 | 自動檢查結果 | [wiki/data/check_report.md](wiki/data/check_report.md) |
 | 核心痛點：累計產品組合 → 單期換算 | [wiki/data/產品組合追蹤.md](wiki/data/產品組合追蹤.md) |
+| **教學 HTML 簡報** | [deck/index.html](deck/index.html)（線上版：https://claude.ai/artifact/2LK9bokXx8WGEwSeJXGbXH） |
+| 簡報 workflow（graph） | [.agents/workflows/topic-slides.md](.agents/workflows/topic-slides.md) |
+| 簡報執行與檢查報告 | [deck/report.md](deck/report.md) |
 
 ## 資料來源（8 份，每份一次 ingest、一個 commit）
 
