@@ -103,6 +103,13 @@ for r in fin:
     add("F", abs(gp - opex - op) <= 1.5, f"{p}：毛利 − 費用 {opex:,.0f} = 營業利益 {op:,.0f}")
     add("F", abs(op + nonop - pre) <= 1.5, f"{p}：營業利益 + 業外 {nonop:,.0f} = 稅前 {pre:,.0f}")
     add("F", abs(pre - tax - ni) <= 1.5, f"{p}：稅前 − 所得稅 {tax:,.0f} = 本期淨利 {ni:,.0f}")
+    # F-EPS：基本 EPS × 基本加權股數 ≈ 歸屬母公司淨利（抓「基本／稀釋 EPS 拿錯」）
+    # 只差 0.01 元的錯誤，B 檢查的四捨五入容許範圍抓不到，所以在 F 用股數反推
+    if r.get("shares_basic") and r.get("ni_parent") and r.get("eps_basic"):
+        implied = num(r["ni_parent"]) / num(r["eps_basic"])
+        sh = num(r["shares_basic"])
+        add("F", abs(implied - sh) / sh <= 0.0025,
+            f"{p}：歸屬母公司淨利 ÷ 基本 EPS {num(r['eps_basic']):.2f} = {implied:.1f} 百萬股 vs 基本加權股數 {sh:.1f} 百萬股")
     if r.get("gm_label"):
         add("F", abs(gp / rev * 100 - num(r["gm_label"])) <= 0.15,
             f"{p}：毛利率 {gp / rev * 100:.1f}% vs 報表標示 {num(r['gm_label']):.1f}%")
