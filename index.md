@@ -4,10 +4,24 @@
 
 ## 概念（先讀這裡）
 
+- [IC測試是什麼](wiki/concepts/IC測試是什麼.md) — 晶片出貨前的品檢；矽格營收八成來自測試
+- [晶圓測試與成品測試](wiki/concepts/晶圓測試與成品測試.md) — CP（封裝前）vs FT（封裝後）
+- [系統級測試與預燒](wiki/concepts/系統級測試與預燒.md) — SLT 像試駕、Burn-in 像烤機；AI 晶片特別需要
+- [封測產業鏈](wiki/concepts/封測產業鏈.md) — 設計 → 製造 → 封裝 → 測試；OSAT vs IDM
+- [3A策略](wiki/concepts/3A策略.md) — AI／ASIC／車用 客群 × 先進測試／自動化／AI 工廠
+
 ## 公司
+
+- [矽格公司概覽](wiki/company/矽格公司概覽.md) — 基本資料、業務別營收結構、2025 成績
+- [擴廠與資本支出](wiki/company/擴廠與資本支出.md) — 中興三廠、湖口二廠、資本支出
 
 ## 季度
 
 ## 數據
 
+- [財務數據總表](wiki/data/財務數據總表.md) — 年度與季度損益
+- [檢查報告](wiki/data/check_report.md) — `scripts/check.py` 自動產生
+
 ## 資料來源
+
+- [2025年報](wiki/sources/2025年報.md) — 2025 全年成績、業務結構、產業概況、擴廠計畫
